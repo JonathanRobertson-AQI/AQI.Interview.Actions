@@ -1,0 +1,32 @@
+name: Reset Test branch to Develop
+
+on:
+  # Manual button click
+  workflow_dispatch:
+
+  # Every 2 weeks (Monday at 2am UTC as an example)
+  schedule:
+    - cron: '0 2 */14 * *'
+
+permissions:
+  contents: write
+
+jobs:
+  reset-branch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Force reset test to develop
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          git checkout test
+          git reset --hard origin/develop
+          git push origin test --force
+``
